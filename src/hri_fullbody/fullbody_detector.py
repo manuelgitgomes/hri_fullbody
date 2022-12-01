@@ -719,13 +719,18 @@ class FullbodyDetector:
                 self.roi.x_offset,
                 self.roi.y_offset
             )
+            if torso_res == None:
+                if self.body_position_estimation[0]:
+                    torso_res = self.body_position_estimation
+                else:
+                    torso_res = np.array([0, 0, 0])
+
         elif self.body_position_estimation[0]:
             torso_res = self.body_position_estimation
         else:
             torso_res = np.array([0, 0, 0])
 
         ### Publishing tf transformations ###
-
         t = header.stamp.to_sec()
 
         if not self.one_euro_filter[0] and self.use_depth:
