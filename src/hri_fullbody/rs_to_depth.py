@@ -32,8 +32,10 @@ def rgb_to_xyz(
                * depth_model.fy()
                / rgb_model.fy())
               + depth_model.cy())
-    if 0 < y_d < depth_model.width or 0 < x_d < depth_model.height:
-        return None
+    print(y_d, depth_model.width) 
+    print(x_d, depth_model.height) 
+    if not (0 < x_d < depth_model.width and 0 < y_d < depth_model.height):
+        return np.array([None, None, None])
     z = depth_data[y_d][x_d]/1000
     x = (x_d - depth_model.cx())*z/depth_model.fx()
     y = (y_d - depth_model.cy())*z/depth_model.fy()

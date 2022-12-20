@@ -704,6 +704,7 @@ class FullbodyDetector:
         ### depth and rotation ###
 
         theta = np.arctan2(pose_3d[MP_RIGHT_HIP].get('x'), -pose_3d[MP_RIGHT_HIP].get('z'))
+        torso_res_prev = np.array([None, None, None])
         if self.use_depth:
             torso_px = _normalized_to_pixel_coordinates(
                 (pose_2d[MP_LEFT_HIP].get('x')+pose_2d[MP_RIGHT_HIP].get('x'))/2,
@@ -719,11 +720,16 @@ class FullbodyDetector:
                 self.roi.x_offset,
                 self.roi.y_offset
             )
-            if torso_res == None:
-                if self.body_position_estimation[0]:
+            if torso_res.any() == None:
+                if torso_res_prev.all() != None:
+                    torso_res = torso_res_prev
+                elif self.body_position_estimation[0]:
                     torso_res = self.body_position_estimation
                 else:
+                    print('test')
                     torso_res = np.array([0, 0, 0])
+            else:
+                torso_res_prev = torso_res
 
         elif self.body_position_estimation[0]:
             torso_res = self.body_position_estimation
